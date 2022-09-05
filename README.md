@@ -1,7 +1,10 @@
 # Northcoders News API
 We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
-Instructions for cloning this repo:
+Instructions to follow after cloning this repo:
 
-If anyone clone this repo , they will need to create two .env files to run this project: `.env.test` and `.env.development`. Into each, add `PGDATABASE=<database_name_here>`, with the correct database name for that environment (see `/db/setup.sql` for the database names). 
-Double check that these .env files are .gitignored.
+1. You'll need two .env files such as .env.test and .env.development because we have two databases to link in connection.js file. These databases are different for developement and test purposes.
+
+2. In .env.test you should write PGDATABASE=nc_news_test .
+
+3. You should write PGDATABASE=nc_news in .env.development file.
