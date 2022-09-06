@@ -34,3 +34,27 @@ describe('api/topics', () => {
         });
     });
 });
+describe('api/articles/:article_id', () => {
+    describe('GET', () => {
+        test('200: responds with a single matching article  ', () => {
+            const article_id = 2;
+            return request(app)
+                .get(`/api/articles/${article_id}`)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(typeof body.article).toBe('object');
+                    const { article } = body;
+                    expect(article).toHaveProperty('author');
+                    expect(article).toHaveProperty('title');
+                    expect(article).toHaveProperty('article_id');
+                    expect(article).toHaveProperty('body');
+                    expect(article).toHaveProperty('topic');
+                    expect(article).toHaveProperty('created_at');
+                    expect(article).toHaveProperty('votes');
+                });
+
+        });
+
+    });
+
+});;
