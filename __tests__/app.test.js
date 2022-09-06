@@ -16,6 +16,7 @@ describe('api/topics', () => {
                 .then(({ body }) => {
                     expect(body.topic.length > 0).toBe(true);
                     const { topic } = body;
+                    expect(Array.isArray(topic)).toBe(true);
                     topic.forEach(topic => {
                         expect(topic).toHaveProperty('slug');
                         expect(topic).toHaveProperty('description');
