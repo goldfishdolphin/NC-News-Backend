@@ -5,5 +5,4 @@ exports.selectTopics = () => {
         .then((result) => {
             return result.rows;
         });
-
 };

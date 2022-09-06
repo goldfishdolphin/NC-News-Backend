@@ -7,8 +7,8 @@ const testData = require('../db/data/test-data');
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe.only('api/topics', () => {
-    describe.only('GET', () => {
+describe('api/topics', () => {
+    describe('GET', () => {
         test('200: responds with an array of topics ', () => {
             return request(app)
                 .get('/api/topics')
@@ -22,6 +22,14 @@ describe.only('api/topics', () => {
                     });
                 });
         });
-    });
+        test('404: responds with an error message when passes a route that does not exist ', () => {
+            return request(app)
+                .get('/api/NotARoute')
+                .expect(404)
+                .then(({ body }) => {
 
+                    expect(body.message).toBe('Path Not Found');
+                });
+        });
+    });
 });
