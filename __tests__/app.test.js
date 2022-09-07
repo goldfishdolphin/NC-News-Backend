@@ -85,6 +85,9 @@ describe('GET', () => {
                     });
                 });
         });
+
+    });
+    describe('Incorrect Path', () => {
         test('404: responds with an error message when passes a route that does not exist ', () => {
             return request(app)
                 .get('/api/NotARoute')
@@ -94,6 +97,8 @@ describe('GET', () => {
                     expect(body.message).toBe('Path Not Found');
                 });
         });
+
     });
+
 });
 

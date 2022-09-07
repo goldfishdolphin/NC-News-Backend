@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { getArticleById } = require('./controllers/get-articleById-controller');
+const { getArticleById } = require('./controllers/get-articles-controller');
 const { getTopics } = require('./controllers/get-topics-controller');
 const { getUser } = require('./controllers/get-user-controller');
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./errors/index');
