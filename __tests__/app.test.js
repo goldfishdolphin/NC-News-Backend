@@ -87,18 +87,48 @@ describe('GET', () => {
         });
 
     });
-    describe('Incorrect Path', () => {
-        test('404: responds with an error message when passes a route that does not exist ', () => {
-            return request(app)
-                .get('/api/NotARoute')
-                .expect(404)
-                .then(({ body }) => {
+});
+describe('Error Handling :Incorrect Path', () => {
+    test('404: responds with an error message when passes a route that does not exist ', () => {
+        return request(app)
+            .get('/api/NotARoute')
+            .expect(404)
+            .then(({ body }) => {
 
-                    expect(body.message).toBe('Path Not Found');
-                });
-        });
-
+                expect(body.message).toBe('Path Not Found');
+            });
     });
 
 });
 
+describe('PATCH', () => {
+    describe('api/articles/:article_id', () => {
+        test('200: responds with an updated article', () => {
+            const article_id = 3;
+            const newVote = 100;
+            const votesUpdate = {
+                inc_votes: newVote
+            };
+
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article).toEqual({
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: 100
+                    });
+
+                });
+
+
+        });
+    });
+});
+;
