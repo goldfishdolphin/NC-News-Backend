@@ -7,8 +7,8 @@ const testData = require('../db/data/test-data');
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
-describe('api/topics', () => {
-    describe('GET', () => {
+describe('GET', () => {
+    describe('api/topics', () => {
         test('200: responds with an array of topics ', () => {
             return request(app)
                 .get('/api/topics')
@@ -33,4 +33,41 @@ describe('api/topics', () => {
                 });
         });
     });
+    describe('api/articles/:article_id', () => {
+
+        test('200: responds with a single matching article  ', () => {
+            const article_id = 2;
+            return request(app)
+                .get(`/api/articles/${article_id}`)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(typeof body.article).toBe('object');
+                    const { article } = body;
+                    expect(article).toHaveProperty('author');
+                    expect(article).toHaveProperty('title');
+                    expect(article).toHaveProperty('article_id');
+                    expect(article).toHaveProperty('body');
+                    expect(article).toHaveProperty('topic');
+                    expect(article).toHaveProperty('created_at');
+                    expect(article).toHaveProperty('votes');
+                });
+        });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            return request(app)
+                .get('/api/articles/99999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Article not found');
+                });
+        });
+        test('400 : responds with an error message when passed a route that is invalid', () => {
+            return request(app)
+                .get('/api/articles/NotAId')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Invalid ID');
+                });
+        });
+    });
 });
+
