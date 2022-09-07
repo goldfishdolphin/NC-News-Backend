@@ -69,5 +69,36 @@ describe('GET', () => {
                 });
         });
     });
+    describe('api/users', () => {
+        test('200: responds with an array of users', () => {
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(({ body }) => {
+                    const users = body;
+                    expect(Array.isArray(users)).toBe(true);
+                    expect(users.length > 0);
+                    users.forEach(user => {
+                        expect(user).toHaveProperty('username');
+                        expect(user).toHaveProperty('name');
+                        expect(user).toHaveProperty('avatar_url');
+                    });
+                });
+        });
+
+    });
+    describe('Incorrect Path', () => {
+        test('404: responds with an error message when passes a route that does not exist ', () => {
+            return request(app)
+                .get('/api/NotARoute')
+                .expect(404)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Path Not Found');
+                });
+        });
+
+    });
+
 });
 
