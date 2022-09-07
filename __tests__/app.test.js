@@ -60,7 +60,7 @@ describe('GET', () => {
                     expect(body.message).toBe('Article not found');
                 });
         });
-        test.only('400 : responds with an error message when passed a route that is invalid', () => {
+        test('400 : responds with an error message when passed a route that is invalid', () => {
             return request(app)
                 .get('/api/articles/NotAId')
                 .expect(400)
