@@ -61,7 +61,8 @@ Go to the heroku site and log in.
 - `Configure Add-ons`
 - Choose `Heroku Postgres`
 
-The free tier will be adequate for our purposes. This will provide you with a `postgreSQL` pre-created database!
+The free tier will be adequate for our purposes. This will provide you with a `postgreSQL` pre-created 
+database!
 
 Check that the database exists. Click `settings` on it, and view the credentials. Keep an eye on the URI. Don't close this yet!
 
