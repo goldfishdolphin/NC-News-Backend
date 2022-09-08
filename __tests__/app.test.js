@@ -87,18 +87,114 @@ describe('GET', () => {
         });
 
     });
-    describe('Incorrect Path', () => {
-        test('404: responds with an error message when passes a route that does not exist ', () => {
-            return request(app)
-                .get('/api/NotARoute')
-                .expect(404)
-                .then(({ body }) => {
+});
+describe('Error Handling :Incorrect Path', () => {
+    test('404: responds with an error message when passes a route that does not exist ', () => {
+        return request(app)
+            .get('/api/NotARoute')
+            .expect(404)
+            .then(({ body }) => {
 
-                    expect(body.message).toBe('Path Not Found');
-                });
-        });
-
+                expect(body.message).toBe('Path Not Found');
+            });
     });
 
 });
 
+describe('PATCH', () => {
+    describe('api/articles/:article_id', () => {
+        test('200: responds with an updated article when there is an increase in votes', () => {
+            const article_id = 3;
+            const newVote = 100;
+            const votesUpdate = {
+                inc_votes: newVote
+            };
+
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article).toEqual({
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: 100
+                    });
+                });
+        });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            return request(app)
+                .get('/api/articles/99999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Article not found');
+                });
+        });
+        test('400 : responds with an error message when passed a route that is invalid', () => {
+            return request(app)
+                .get('/api/articles/NotAId')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Invalid ID');
+                });
+        });
+
+        test('200: responds with an updated article when there is an decrease in votes', () => {
+            const article_id = 3;
+            const newVote = -10;
+            const votesUpdate = {
+                inc_votes: newVote
+            };
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article).toEqual({
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: -10
+                    });
+                });
+        });
+
+        test('400: responds with error if required fields are missing', () => {
+            const article_id = 3;
+
+            const votesUpdate = {};
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+
+        });
+        test('400: responds with error value passed for an update are not valid', () => {
+            const article_id = 3;
+            const newVote = -10;
+            const votesUpdate = {
+                inc_votes: 'vote'
+            };
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+
+        });
+    });
+
+
+});
