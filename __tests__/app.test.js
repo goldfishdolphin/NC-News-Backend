@@ -126,6 +126,22 @@ describe('PATCH', () => {
                     });
                 });
         });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            return request(app)
+                .get('/api/articles/99999')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Article not found');
+                });
+        });
+        test('400 : responds with an error message when passed a route that is invalid', () => {
+            return request(app)
+                .get('/api/articles/NotAId')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Invalid ID');
+                });
+        });
 
         test('200: responds with an updated article when there is an decrease in votes', () => {
             const article_id = 3;
@@ -149,6 +165,7 @@ describe('PATCH', () => {
                     });
                 });
         });
+
         test('400: responds with error if required fields are missing', () => {
             const article_id = 3;
 
