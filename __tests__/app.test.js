@@ -103,7 +103,7 @@ describe('Error Handling :Incorrect Path', () => {
 
 describe('PATCH', () => {
     describe('api/articles/:article_id', () => {
-        test('200: responds with an updated article', () => {
+        test('200: responds with an updated article when there is an increase in votes', () => {
             const article_id = 3;
             const newVote = 100;
             const votesUpdate = {
@@ -124,11 +124,60 @@ describe('PATCH', () => {
                         created_at: '2020-11-03T09:12:00.000Z',
                         votes: 100
                     });
+                });
+        });
 
+        test('200: responds with an updated article when there is an decrease in votes', () => {
+            const article_id = 3;
+            const newVote = -10;
+            const votesUpdate = {
+                inc_votes: newVote
+            };
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.article).toEqual({
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: -10
+                    });
+                });
+        });
+        test('400: responds with error if required fields are missing', () => {
+            const article_id = 3;
+
+            const votesUpdate = {};
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
                 });
 
+        });
+        test('400: responds with error value passed for an update are not valid', () => {
+            const article_id = 3;
+            const newVote = -10;
+            const votesUpdate = {
+                inc_votes: 'vote'
+            };
+            return request(app)
+                .patch(`/api/articles/${article_id}`)
+                .send(votesUpdate)
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
 
         });
     });
+
+
 });
-;

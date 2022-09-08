@@ -12,6 +12,12 @@ exports.selectArticleById = (article_id) => {
 
 exports.updateArticleByID = (articleUpdate, article_id) => {
     const { inc_votes } = articleUpdate;
+    if (!inc_votes) {
+        return Promise.reject({ status: 400, message: 'Bad Request' });
+    }
+    else if (typeof inc_votes !== 'number') {
+        return Promise.reject({ status: 400, message: 'Bad Request' });
+    }
     return db.query(
         `UPDATE articles 
         SET votes = votes + $1
