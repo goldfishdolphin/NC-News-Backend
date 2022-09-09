@@ -122,6 +122,7 @@ describe('Error Handling :Incorrect Path', () => {
 
 });
 
+
 describe('PATCH', () => {
     describe('api/articles/:article_id', () => {
         test('200: responds with an updated article when there is an increase in votes', () => {

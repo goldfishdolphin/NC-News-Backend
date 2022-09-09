@@ -38,3 +38,6 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
         });
 
 };
+exports.selectArticles = (req, res) => {
+
+};
