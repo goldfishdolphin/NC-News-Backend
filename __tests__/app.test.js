@@ -36,7 +36,7 @@ describe('GET', () => {
     describe('api/articles/:article_id', () => {
 
         test('200: responds with a single matching article  ', () => {
-            const article_id = 2;
+            const article_id = 5;
             return request(app)
                 .get(`/api/articles/${article_id}`)
                 .expect(200)
@@ -52,6 +52,25 @@ describe('GET', () => {
                     expect(article).toHaveProperty('votes');
                 });
         });
+        test('200: should return an object with a comments count when ', () => {
+            const article_id = 5;
+            return request(app)
+                .get(`/api/articles/${article_id}`)
+                .expect(200)
+                .then(({ body }) => {
+                    const { article } = body;
+                    expect(article).toEqual({
+                        article_id: 5,
+                        title: 'UNCOVERED: catspiracy to bring down democracy',
+                        topic: 'cats',
+                        author: 'rogersop',
+                        body: 'Bastet walks amongst us, and the cats are taking arms!',
+                        created_at: '2020-08-03T13:14:00.000Z',
+                        votes: 0,
+                        comment_count: 2
+                    });
+                });
+        });
         test('404: responds with an error message when passed a route that does not exist ', () => {
             return request(app)
                 .get('/api/articles/99999')
@@ -65,10 +84,12 @@ describe('GET', () => {
                 .get('/api/articles/NotAId')
                 .expect(400)
                 .then(({ body }) => {
-                    expect(body.message).toBe('Invalid ID');
+                    expect(body.message).toBe('Bad Request');
                 });
         });
+
     });
+
     describe('api/users', () => {
         test('200: responds with an array of users', () => {
             return request(app)
@@ -139,7 +160,7 @@ describe('PATCH', () => {
                 .get('/api/articles/NotAId')
                 .expect(400)
                 .then(({ body }) => {
-                    expect(body.message).toBe('Invalid ID');
+                    expect(body.message).toBe('Bad Request');
                 });
         });
 
