@@ -19,6 +19,9 @@ exports.patchArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    selectArticles();
+    const { order } = req.query;
+    selectArticles(order).then((articles) => {
+        res.status(200).send({ articles });
+    });
 
 };

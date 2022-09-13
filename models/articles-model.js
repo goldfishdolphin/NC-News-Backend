@@ -38,6 +38,19 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
         });
 
 };
-exports.selectArticles = (req, res) => {
+exports.selectArticles = (order) => {
+    const sort_by = 'created_at';
+    let querystr = `SELECT articles.author,articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes , CAST (COUNT (comment_id)as INT) as comment_count
+FROM comments
+RIGHT OUTER JOIN articles 
+ON comments.article_id = articles.article_id
+GROUP BY articles.article_id `;
+    if (order) {
+        querystr += `ORDER BY ${sort_by} ${order}`;
+    }
+    return db.query(querystr).then((results) => {
+
+        return results.rows;
+    });
 
 };

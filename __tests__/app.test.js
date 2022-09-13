@@ -108,6 +108,40 @@ describe('GET', () => {
         });
 
     });
+    describe.only('api/articles', () => {
+        test('200: responds with an array of users ', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+
+                    expect(Array.isArray(articles)).toBe(true);
+                    articles.forEach(article => {
+                        expect(article).toHaveProperty('author');
+                        expect(article).toHaveProperty('title');
+                        expect(article).toHaveProperty('article_id');
+                        expect(article).toHaveProperty('topic');
+                        expect(article).toHaveProperty('created_at');
+                        expect(article).toHaveProperty('votes');
+                        expect(article).toHaveProperty('comment_count');
+                    });
+
+                });
+
+        });
+        test('200: responds with an array of users which is sorted by date', () => {
+            return request(app)
+                .get('/api/articles?order=DESC')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('created_at', { descending: true });
+                });
+        });
+
+    });
+
 });
 describe('Error Handling :Incorrect Path', () => {
     test('404: responds with an error message when passes a route that does not exist ', () => {
