@@ -132,11 +132,29 @@ describe('GET', () => {
         });
         test('200: responds with an array of users which is sorted by date', () => {
             return request(app)
-                .get('/api/articles?order=DESC')
+                .get('/api/articles')
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body;
                     expect(articles).toBeSortedBy('created_at', { descending: true });
+                });
+        });
+        test('200: responds with all the articles of a certain topic', () => {
+            return request(app)
+                .get('/api/articles?topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles.length).toBe(1);
+                });
+        });
+        test('200: responds with all the articles of a certain topic is not found', () => {
+            return request(app)
+                .get('/api/articles?topic=dog')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+
                 });
         });
 

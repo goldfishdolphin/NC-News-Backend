@@ -38,18 +38,28 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
         });
 
 };
-exports.selectArticles = (order) => {
-    const sort_by = 'created_at';
-    let querystr = `SELECT articles.author,articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes , CAST (COUNT (comment_id)as INT) as comment_count
+exports.selectArticles = (order = 'DESC', sort_by = 'created_at', topic) => {
+
+    let queryValues = [];
+    let queryStr = `
+SELECT articles.author,articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes , CAST (COUNT (comment_id)as INT) as comment_count
 FROM comments
 RIGHT OUTER JOIN articles 
 ON comments.article_id = articles.article_id
-GROUP BY articles.article_id `;
-    if (order) {
-        querystr += `ORDER BY ${sort_by} ${order}`;
+`;
+    if (topic) {
+        queryStr += `WHERE articles.topic = %L`;
+        queryValues.push(topic);
     }
-    return db.query(querystr).then((results) => {
 
+    queryStr += ` 
+GROUP BY articles.article_id ,comments.article_id
+ORDER BY %I %s ;`;
+    queryValues.push(sort_by);
+    queryValues.push(order.toUpperCase());
+    const formattedQuery = format(queryStr, ...queryValues);
+
+    return db.query(formattedQuery).then((results) => {
         return results.rows;
     });
 

@@ -11,6 +11,7 @@ exports.patchArticleById = (req, res, next) => {
     const { article_id } = req.params;
     const articleUpdate = req.body;
 
+
     updateArticleByID(articleUpdate, article_id).then((article) => {
         res.status(200).send({ article });
 
@@ -19,8 +20,9 @@ exports.patchArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res) => {
-    const { order } = req.query;
-    selectArticles(order).then((articles) => {
+    const { order, sort_by, topic } = req.query;
+
+    selectArticles(order, sort_by, topic).then((articles) => {
         res.status(200).send({ articles });
     });
 
