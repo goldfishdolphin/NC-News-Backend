@@ -108,7 +108,7 @@ describe('GET', () => {
         });
 
     });
-    describe.only('api/articles', () => {
+    describe('api/articles', () => {
         test('200: responds with an array of users ', () => {
             return request(app)
                 .get('/api/articles')
@@ -148,15 +148,38 @@ describe('GET', () => {
                     expect(articles.length).toBe(1);
                 });
         });
-        test('200: responds with all the articles of a certain topic is not found', () => {
+        test('404: responds with an error when topic passed in the query does not exist', () => {
             return request(app)
                 .get('/api/articles?topic=dog')
-                .expect(200)
+                .expect(404)
                 .then(({ body }) => {
-                    const { articles } = body;
+
+                    expect(body.message).toBe('Topic does not exist');
 
                 });
         });
+        test('400: responds with an error when an invalid sort query is passed ', () => {
+            return request(app)
+                .get(`/api/articles?sort_by='NotAcolumn'`)
+                .expect(400)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Invalid sort query');
+
+                });
+        });
+        test('400: responds with an error when an invalid order is query is passed ', () => {
+            return request(app)
+                .get(`/api/articles?order='hello'`)
+                .expect(400)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Invalid order query');
+
+                });
+        });
+
+
 
     });
 

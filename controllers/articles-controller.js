@@ -19,11 +19,12 @@ exports.patchArticleById = (req, res, next) => {
         .catch(next);
 };
 
-exports.getArticles = (req, res) => {
+exports.getArticles = (req, res, next) => {
     const { order, sort_by, topic } = req.query;
 
     selectArticles(order, sort_by, topic).then((articles) => {
         res.status(200).send({ articles });
-    });
+    })
+        .catch(next);
 
 };

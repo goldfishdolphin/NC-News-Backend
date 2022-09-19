@@ -39,6 +39,12 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
 
 };
 exports.selectArticles = (order = 'DESC', sort_by = 'created_at', topic) => {
+    if (!['author', 'article_id', 'title', 'votes', 'topic', 'created_at', 'comment_count'].includes(sort_by)) {
+        return Promise.reject({ status: 400, message: 'Invalid sort query' });
+    }
+    else if (!['asc', 'ASC', 'DESC', 'desc'].includes(order)) {
+        return Promise.reject({ status: 400, message: 'Invalid order query' });
+    }
 
     let queryValues = [];
     let queryStr = `
@@ -51,7 +57,6 @@ ON comments.article_id = articles.article_id
         queryStr += `WHERE articles.topic = %L`;
         queryValues.push(topic);
     }
-
     queryStr += ` 
 GROUP BY articles.article_id ,comments.article_id
 ORDER BY %I %s ;`;
@@ -60,7 +65,10 @@ ORDER BY %I %s ;`;
     const formattedQuery = format(queryStr, ...queryValues);
 
     return db.query(formattedQuery).then((results) => {
-        return results.rows;
+        if (results.rows.length === 0) {
+            return Promise.reject({ status: 404, message: 'Topic does not exist' });
+        } else {
+            return results.rows;
+        }
     });
-
 };
