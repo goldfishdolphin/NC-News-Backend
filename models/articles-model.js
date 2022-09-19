@@ -38,3 +38,37 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
         });
 
 };
+exports.selectArticles = (order = 'DESC', sort_by = 'created_at', topic) => {
+    if (!['author', 'article_id', 'title', 'votes', 'topic', 'created_at', 'comment_count'].includes(sort_by)) {
+        return Promise.reject({ status: 400, message: 'Invalid sort query' });
+    }
+    else if (!['asc', 'ASC', 'DESC', 'desc'].includes(order)) {
+        return Promise.reject({ status: 400, message: 'Invalid order query' });
+    }
+
+    let queryValues = [];
+    let queryStr = `
+SELECT articles.author,articles.article_id, articles.title, articles.topic, articles.created_at, articles.votes , CAST (COUNT (comment_id)as INT) as comment_count
+FROM comments
+RIGHT OUTER JOIN articles 
+ON comments.article_id = articles.article_id
+`;
+    if (topic) {
+        queryStr += `WHERE articles.topic = %L`;
+        queryValues.push(topic);
+    }
+    queryStr += ` 
+GROUP BY articles.article_id ,comments.article_id
+ORDER BY %I %s ;`;
+    queryValues.push(sort_by);
+    queryValues.push(order.toUpperCase());
+    const formattedQuery = format(queryStr, ...queryValues);
+
+    return db.query(formattedQuery).then((results) => {
+        if (results.rows.length === 0) {
+            return Promise.reject({ status: 404, message: 'Topic does not exist' });
+        } else {
+            return results.rows;
+        }
+    });
+};

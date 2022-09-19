@@ -108,6 +108,81 @@ describe('GET', () => {
         });
 
     });
+    describe('api/articles', () => {
+        test('200: responds with an array of users ', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+
+                    expect(Array.isArray(articles)).toBe(true);
+                    articles.forEach(article => {
+                        expect(article).toHaveProperty('author');
+                        expect(article).toHaveProperty('title');
+                        expect(article).toHaveProperty('article_id');
+                        expect(article).toHaveProperty('topic');
+                        expect(article).toHaveProperty('created_at');
+                        expect(article).toHaveProperty('votes');
+                        expect(article).toHaveProperty('comment_count');
+                    });
+
+                });
+
+        });
+        test('200: responds with an array of users which is sorted by date', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('created_at', { descending: true });
+                });
+        });
+        test('200: responds with all the articles of a certain topic', () => {
+            return request(app)
+                .get('/api/articles?topic=cats')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles.length).toBe(1);
+                });
+        });
+        test('404: responds with an error when topic passed in the query does not exist', () => {
+            return request(app)
+                .get('/api/articles?topic=dog')
+                .expect(404)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Topic does not exist');
+
+                });
+        });
+        test('400: responds with an error when an invalid sort query is passed ', () => {
+            return request(app)
+                .get(`/api/articles?sort_by='NotAcolumn'`)
+                .expect(400)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Invalid sort query');
+
+                });
+        });
+        test('400: responds with an error when an invalid order is query is passed ', () => {
+            return request(app)
+                .get(`/api/articles?order='hello'`)
+                .expect(400)
+                .then(({ body }) => {
+
+                    expect(body.message).toBe('Invalid order query');
+
+                });
+        });
+
+
+
+    });
+
 });
 describe('Error Handling :Incorrect Path', () => {
     test('404: responds with an error message when passes a route that does not exist ', () => {
@@ -121,6 +196,7 @@ describe('Error Handling :Incorrect Path', () => {
     });
 
 });
+
 
 describe('PATCH', () => {
     describe('api/articles/:article_id', () => {
