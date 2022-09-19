@@ -182,6 +182,28 @@ describe('GET', () => {
 
 
     });
+    describe('api/articles/:article_id/comments', () => {
+        test('200: responds with an array of comments of a given article id ', () => {
+            const article_id = 5;
+            return request(app)
+                .get(`/api/articles/${article_id}/comments`)
+                .expect(200)
+                .then(({ body }) => {
+                    const { comments } = body;
+                    expect(Array.isArray(comments)).toBe(true);
+                    expect(comments.forEach(comment => {
+                        expect(comment).toHaveProperty(`comment_id`);
+                        expect(comment).toHaveProperty(`votes`);
+                        expect(comment).toHaveProperty(`created_at`);
+                        expect(comment).toHaveProperty(`author`);
+                        expect(comment).toHaveProperty(`body`);
+                    }));
+
+
+                });
+
+        });
+    });
 
 });
 describe('Error Handling :Incorrect Path', () => {
