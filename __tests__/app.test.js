@@ -203,6 +203,22 @@ describe('GET', () => {
                 });
 
         });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            return request(app)
+                .get('/api/articles/99999/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Comments not found');
+                });
+        });
+        test('400 : responds with an error message when passed a route that is invalid', () => {
+            return request(app)
+                .get('/api/articles/NotAnId/comments')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
     });
 
 });
