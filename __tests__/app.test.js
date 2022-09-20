@@ -182,6 +182,44 @@ describe('GET', () => {
 
 
     });
+    describe('api/articles/:article_id/comments', () => {
+        test('200: responds with an array of comments of a given article id ', () => {
+            const article_id = 5;
+            return request(app)
+                .get(`/api/articles/${article_id}/comments`)
+                .expect(200)
+                .then(({ body }) => {
+                    const { comments } = body;
+                    expect(Array.isArray(comments)).toBe(true);
+                    expect(comments.forEach(comment => {
+                        expect(comment).toHaveProperty(`comment_id`);
+                        expect(comment).toHaveProperty(`votes`);
+                        expect(comment).toHaveProperty(`created_at`);
+                        expect(comment).toHaveProperty(`author`);
+                        expect(comment).toHaveProperty(`body`);
+                    }));
+
+
+                });
+
+        });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            return request(app)
+                .get('/api/articles/99999/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Comments not found');
+                });
+        });
+        test('400 : responds with an error message when passed a route that is invalid', () => {
+            return request(app)
+                .get('/api/articles/NotAnId/comments')
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
+    });
 
 });
 describe('Error Handling :Incorrect Path', () => {
