@@ -23,6 +23,5 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
     const formattedQuery = format(queryString, [queryArray]);
     return db.query(formattedQuery).then(({ rows }) => {
         return rows[0];
-
     });
 };
