@@ -89,7 +89,6 @@ describe('GET', () => {
         });
 
     });
-
     describe('api/users', () => {
         test('200: responds with an array of users', () => {
             return request(app)
@@ -331,5 +330,36 @@ describe('PATCH', () => {
         });
     });
 
+
+});
+describe('POST', () => {
+    describe('api/articles/:article_id/comments', () => {
+        test('201: responds with a new comment added to the database', () => {
+            const newComment = {
+                username: 'lurker',
+                body: 'Amamzing article! Loved it!'
+            };
+            const article_id = 4;
+            return request(app)
+                .post(`/api/articles/${article_id}/comments`)
+                .send(newComment)
+                .expect(201)
+                .then(({ body }) => {
+                    expect(typeof body.comment).toBe('object')
+                        ;
+                    console.log(body);
+                    expect(body.comment).toEqual(expect.objectContaining({
+                        comment_id: 19,
+                        body: 'Amamzing article! Loved it!',
+                        article_id: 4,
+                        author: 'lurker',
+                        votes: 0,
+                    }));
+                });
+
+
+        });
+
+    });
 
 });
