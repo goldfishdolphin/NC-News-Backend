@@ -22,7 +22,6 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
     let queryString = 'INSERT INTO comments (article_id, author, body) VALUES %L RETURNING *;';
     const formattedQuery = format(queryString, [queryArray]);
     return db.query(formattedQuery).then(({ rows }) => {
-        console.log(rows);
         return rows[0];
 
     });

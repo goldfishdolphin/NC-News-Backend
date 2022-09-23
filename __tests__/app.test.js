@@ -345,9 +345,7 @@ describe('POST', () => {
                 .send(newComment)
                 .expect(201)
                 .then(({ body }) => {
-                    expect(typeof body.comment).toBe('object')
-                        ;
-                    console.log(body);
+                    expect(typeof body.comment).toBe('object');
                     expect(body.comment).toEqual(expect.objectContaining({
                         comment_id: 19,
                         body: 'Amamzing article! Loved it!',
