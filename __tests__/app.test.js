@@ -424,3 +424,22 @@ describe('POST', () => {
 
     });
 });
+describe('DELETE', () => {
+    describe('/api/comments/:comment_id', () => {
+        test.only('204: should remove the comment with the given comment id', () => {
+            // const comment_id = 1;
+            return request(app)
+                .delete(`/api/comments/1`)
+                .expect(204)
+                .then(({ body }) => {
+                    expect(body).toEqual({});
+
+                });
+
+
+        });
+
+
+    });
+
+});

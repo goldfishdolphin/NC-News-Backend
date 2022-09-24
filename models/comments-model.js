@@ -1,5 +1,6 @@
 const { ident } = require('pg-format');
 const format = require('pg-format');
+const { response } = require('../app');
 const db = require('../db/connection');
 exports.selectCommentsByArticleId = (article_id) => {
     if (typeof parseInt(article_id) !== 'number') {
@@ -29,3 +30,12 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
         return rows[0];
     });
 };
+exports.removeCommentById = (comment_id) => {
+
+    return db.query(`DELETE FROM comments
+    WHERE comment_id = $1`, [comment_id]).then(() => {
+        return db.query('SELECT * FROM comments WHERE comment_id = $1', [comment_id]);
+    });
+
+};
+
