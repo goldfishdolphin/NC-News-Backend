@@ -357,7 +357,70 @@ describe('POST', () => {
 
 
         });
+        test('400: responds with an error message when an empty object body is posted', () => {
+            const newComment = {};
+            const article_id = 4;
+            return request(app)
+                .post(`/api/articles/${article_id}/comments`)
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
+        test('400: responds with an error message when the comment object body is posted without a username', () => {
+            const newComment = {
+                body: 'Amamzing article! Loved it!'
+            };
+            const article_id = 4;
+            return request(app)
+                .post(`/api/articles/${article_id}/comments`)
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
+        test('400: responds with an error message when the comment object body is posted without a username', () => {
+            const newComment = {
+                username: 'lurker',
+            };
+            const article_id = 4;
+            return request(app)
+                .post(`/api/articles/${article_id}/comments`)
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
+        test('400: responds with an error message when an  article_id  is invalid ', () => {
+            const newComment = {
+                username: 'lurker',
+                body: 'Amamzing article! Loved it!'
+            };
+            const article_id = 'notAnID';
+            return request(app)
+                .post(`/api/articles/${article_id}/comments`)
+                .send(newComment)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
+                });
+        });
+        test('404: responds with an error message when passed a route that does not exist ', () => {
+            const newComment = {
+                username: 'lurker',
+                body: 'Amamzing article! Loved it!'
+            };
+            return request(app)
+                .post('/api/articles/99999/comments')
+                .send(newComment)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Article not found');
+                });
+        });
 
     });
-
 });

@@ -1,3 +1,4 @@
+const { ident } = require('pg-format');
 const format = require('pg-format');
 const db = require('../db/connection');
 exports.selectCommentsByArticleId = (article_id) => {
@@ -19,6 +20,9 @@ exports.insertCommentByArticleId = (article_id, newComment) => {
     const { username } = newComment;
     const { body } = newComment;
     let queryArray = [article_id, username, body];
+    if (queryArray.includes(undefined)) {
+        return Promise.reject({ status: 400, message: 'Bad Request' });
+    }
     let queryString = 'INSERT INTO comments (article_id, author, body) VALUES %L RETURNING *;';
     const formattedQuery = format(queryString, [queryArray]);
     return db.query(formattedQuery).then(({ rows }) => {
