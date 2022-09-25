@@ -426,20 +426,44 @@ describe('POST', () => {
 });
 describe('DELETE', () => {
     describe('/api/comments/:comment_id', () => {
-        test.only('204: should remove the comment with the given comment id', () => {
-            // const comment_id = 1;
+        test('204: should remove the comment with the given comment id', () => {
+            const comment_id = 1;
             return request(app)
-                .delete(`/api/comments/1`)
+                .delete(`/api/comments/${comment_id}`)
                 .expect(204)
                 .then(({ body }) => {
                     expect(body).toEqual({});
 
                 });
-
-
         });
+        test('404: responds with an error when comment id does not exist ', () => {
+            const comment_id = 111111;
+            return request(app)
+                .delete(`/api/comments/${comment_id}`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Comment id does not exist');
 
+                });
+        });
+        test('400: responds with an error when comment id is not valid', () => {
+            const comment_id = 'NotAComment';
+            return request(app)
+                .delete(`/api/comments/${comment_id}`)
+                .expect(400)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Bad Request');
 
+                });
+        });
+        test('404: responds with an error when the path does not exist ', () => {
+
+            return request(app)
+                .delete(`/api/comments/`)
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toBe('Path Not Found');
+                });
+        });
     });
-
 });
