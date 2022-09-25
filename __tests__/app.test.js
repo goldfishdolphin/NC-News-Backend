@@ -112,9 +112,9 @@ describe('GET', () => {
             return request(app)
                 .get('/api/articles')
                 .expect(200)
-                .then(({ body }) => {
+                .then((response) => {
+                    const { body } = response;
                     const { articles } = body;
-
                     expect(Array.isArray(articles)).toBe(true);
                     articles.forEach(article => {
                         expect(article).toHaveProperty('author');
@@ -125,6 +125,7 @@ describe('GET', () => {
                         expect(article).toHaveProperty('votes');
                         expect(article).toHaveProperty('comment_count');
                     });
+                    expect(articles.length).toBe(12);
 
                 });
 
@@ -135,7 +136,35 @@ describe('GET', () => {
                 .expect(200)
                 .then(({ body }) => {
                     const { articles } = body;
+
                     expect(articles).toBeSortedBy('created_at', { descending: true });
+                });
+        });
+        test('200: responds with an array sorted by title in descending order', () => {
+            return request(app)
+                .get('/api/articles?sort_by=title')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('title', { descending: true });
+                });
+        });
+        test('200: responds with an array sorted by author in descending order', () => {
+            return request(app)
+                .get('/api/articles?sort_by=author')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('author', { descending: true });
+                });
+        });
+        test('200: responds with an array sorted by votes in descending order', () => {
+            return request(app)
+                .get('/api/articles?sort_by=votes')
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('votes', { descending: true });
                 });
         });
         test('200: responds with all the articles of a certain topic', () => {
@@ -147,19 +176,36 @@ describe('GET', () => {
                     expect(articles.length).toBe(1);
                 });
         });
+        test('200: responds with array in ascending order by date created when a query with ascending order is passed  ', () => {
+            return request(app)
+                .get(`/api/articles?order=asc`)
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('created_at', { descending: false });
+
+                });
+        });
+        test('200: responds wth an array of object when 2 queries are passed  ', () => {
+            return request(app)
+                .get(`/api/articles?order=asc&sort_by=title`)
+                .expect(200)
+                .then(({ body }) => {
+                    const { articles } = body;
+                    expect(articles).toBeSortedBy('title', { descending: false });
+                });
+        });
         test('404: responds with an error when topic passed in the query does not exist', () => {
             return request(app)
                 .get('/api/articles?topic=dog')
                 .expect(404)
                 .then(({ body }) => {
-
                     expect(body.message).toBe('Topic does not exist');
-
                 });
         });
         test('400: responds with an error when an invalid sort query is passed ', () => {
             return request(app)
-                .get(`/api/articles?sort_by='NotAcolumn'`)
+                .get(`/api/articles?sort_by=NotAcolumn`)
                 .expect(400)
                 .then(({ body }) => {
 
@@ -169,7 +215,7 @@ describe('GET', () => {
         });
         test('400: responds with an error when an invalid order is query is passed ', () => {
             return request(app)
-                .get(`/api/articles?order='hello'`)
+                .get(`/api/articles?order=hello`)
                 .expect(400)
                 .then(({ body }) => {
 
@@ -177,9 +223,6 @@ describe('GET', () => {
 
                 });
         });
-
-
-
     });
     describe('api/articles/:article_id/comments', () => {
         test('200: responds with an array of comments of a given article id ', () => {
