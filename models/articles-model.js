@@ -39,6 +39,7 @@ exports.updateArticleByID = (articleUpdate, article_id) => {
 
 };
 exports.selectArticles = (order = 'DESC', sort_by = 'created_at', topic) => {
+
     if (!['author', 'article_id', 'title', 'votes', 'topic', 'created_at', 'comment_count'].includes(sort_by)) {
         return Promise.reject({ status: 400, message: 'Invalid sort query' });
     }
