@@ -2,10 +2,12 @@ const { getArticleById, patchArticleById, getArticles } = require('./controllers
 const { getTopics } = require('./controllers/topics-controller');
 const { getUser } = require('./controllers/user-controller');
 const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./errors/index');
+const cors = require('cors');
 
 const express = require('express');
 const { getCommentsbyArticleId, postCommentsByArticleId, deleteArticleById, deleteCommentById } = require('./controllers/comments-controller');
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 app.get('/api/topics', getTopics);
