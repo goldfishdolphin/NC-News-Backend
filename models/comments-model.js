@@ -1,4 +1,3 @@
-const { ident } = require('pg-format');
 const format = require('pg-format');
 const { response } = require('../app');
 const db = require('../db/connection');
