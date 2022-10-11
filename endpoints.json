@@ -25,7 +25,7 @@
     }
   }, 
   
-  "PATCH api/articles/:article_id'": {
+  "PATCH /api/articles/:article_id'": {
     "description": "serves an updated article when there is an increase in votes'",
     "queries": [],
     "exampleResponse": {
