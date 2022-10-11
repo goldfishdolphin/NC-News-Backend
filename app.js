@@ -5,10 +5,12 @@ const { handleCustomErrors, handlePsqlErrors, handleServerErrors } = require('./
 const cors = require('cors');
 const express = require('express');
 const { getCommentsbyArticleId, postCommentsByArticleId, deleteArticleById, deleteCommentById } = require('./controllers/comments-controller');
+const { getEndPoints } = require('./controllers/endpoints-controller');
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
+app.get("/api", getEndPoints);
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/users', getUser);

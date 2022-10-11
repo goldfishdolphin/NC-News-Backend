@@ -7,6 +7,31 @@ const testData = require('../db/data/test-data');
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
+describe('API', () => {
+    test('200: responds with the list of all apis on the app', () => {
+        return request(app)
+            .get('/api')
+            .expect(200)
+            .then(({ body }) => {
+                expect.objectContaining({
+                    "GET /api": expect.any(Object),
+                    "GET /api/topics": expect.any(Object),
+                    "GET /api/articles": expect.any(Object),
+                });
+            });
+
+    });
+    test('404: responds with an error message when passes a route that does not exist ', () => {
+        return request(app)
+            .get('/api/NotARoute')
+            .expect(404)
+            .then(({ body }) => {
+
+                expect(body.message).toBe('Path Not Found');
+            });
+    });
+
+});
 describe('GET', () => {
     describe('api/topics', () => {
         test('200: responds with an array of topics ', () => {
