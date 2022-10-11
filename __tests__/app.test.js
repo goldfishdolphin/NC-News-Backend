@@ -10,7 +10,7 @@ afterAll(() => db.end());
 describe('API', () => {
     test('200: responds with the list of all apis on the app', () => {
         return request(app)
-            .get('/api')
+            .get('/')
             .expect(200)
             .then(({ body }) => {
                 expect.objectContaining({
