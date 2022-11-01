@@ -1,4 +1,4 @@
-const { response } = require("../app");
+
 const { removeCommentById } = require("../models/comments-model");
 const { selectCommentsByArticleId, insertCommentByArticleId } = require("../models/comments-model");
 
