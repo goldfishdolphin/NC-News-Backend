@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC NEWS API</title>
+</head>
+
+<body>
+    <header>
+        <h1>NC NEWS API</h1>
+    </header>
+
+    <h2>Routes</h2>
+    <details>
+        <summary>
+            GET /api
+        </summary>
+        <ul>Description: Serves up a json representation of all the available endpoints of the api</ul>
+    </details>
+    <br />
+    </article>
+    <article>
+        <details>
+            <summary>GET /api/topics</summary>
+            <ul>
+                <li>Description: Serves an array of all topics</li>
+                <li>Queries: []</li>
+                <li>
+                    <summary>Example Response:</summary>
+                    <pre>
+  { 
+    topics: 
+      [
+        { slug: football, description: Footie! },
+        { slug: cats, description: meow! },
+        ...
+      ] 
+  }
+              </pre>
+                </li>
+            </ul>
+        </details>
+    </article>
+    <br />
+    <article>
+        <details>
+            <summary>GET /api/articles</summary>
+            <ul>
+                <li>Description: Serves an array of all topics</li>
+                <li>Queries: author, topic, sort_by, order</li>
+                <li>
+                    <summary>Example Response :</summary>
+                    <pre>
+                    {
+                    articles: [
+                    {
+                    title: Seafood substitutions are increasing,
+                    topic: cooking,
+                    author: weegembump,
+                    body: Text from the article..,
+                    created_at: 1527695953341
+                    }
+                    ]
+                    }
+                </pre>
+                </li>
+            </ul>
+        </details>
+        <br />
+    </article>
+    <article>
+
+        <article>
+            <details>
+                <summary>
+                    GET /api/users
+                </summary>
+                <ul>
+                    <li>Description:Serves an array of all users</li>
+                    <li>Queries:[]</li>
+                    <li>
+                        <summary>Response Example:</summary>
+                        <pre>
+                       users: [
+                        {
+                          username: 'butter_bridge',
+                          name: 'jonny',
+                          avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
+                        },
+                        {
+                          username: 'icellusedkars',
+                          name: 'sam',
+                          avatar_url: 'https://avatars2.githubusercontent.com/u/24604688?s=460&v=4'
+                        },
+                        {
+                          username: 'rogersop',
+                          name: 'paul',
+                          avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+                        },
+                        ...
+                        ]
+                </pre>
+                    </li>
+                </ul>
+            </details>
+            <br />
+        </article>
+
+        <article>
+            <details>
+                <summary> GET /api/articles/:article_id</summary>
+                <ul>
+                    <li>Description: Serves a specific article</li>
+                    <li>Queries:[]</li>
+                    <li>
+                        <summary>Response Example:
+                        </summary>
+                        <pre>
+                            {
+                                article: {
+                                  comment_count: 2,
+                                  article_id: 5,
+                                  title: 'UNCOVERED: catspiracy to bring down democracy',
+                                  topic: 'cats',
+                                  author: 'rogersop',
+                                  body: 'Bastet walks amongst us, and the cats are taking arms!',
+                                  created_at: '2020-08-03T13:14:00.000Z',
+                                  votes: 0
+                                }
+                              }
+                        </pre>
+
+                    </li>
+                </ul>
+            </details>
+            <br />
+        </article>
+
+        <article>
+            <details>
+                <summary>GET /api/articles/:article_id/comments
+                </summary>
+                <ul>
+                    <li>Description: Serves an array of comments of a given article id</li>
+                    <li>Queries: []</li>
+                    <li>
+                        <summary>Example Response: </summary>
+                        <pre>
+                            [
+        {
+          comment_id: 14,
+          body: 'What do you see? I have no idea where this will lead us. This place I speak of, is known as the Black Lodge.',
+          author: 'icellusedkars',
+          votes: 16,
+          created_at: '2020-06-09T05:00:00.000Z'
+        },
+        {
+          comment_id: 15,
+          body: "I am 100% sure that we're not completely sure.",
+          author: 'butter_bridge',
+          votes: 1,
+          created_at: '2020-11-24T00:08:00.000Z'
+        }
+      ]
+                        </pre>
+
+                    </li>
+                </ul>
+            </details>
+            <br />
+        </article>
+        <article>
+            <details>
+                <summary>PATCH /api/articles/:article_id</summary>
+
+                <ul>
+                    <li>Description: Serves an updated article when there is an increase in votes</li>
+                    <li>Queries:[] </li>
+                    <li>Example Request:
+                        <pre>{ inc_votes: 100 }</pre>
+                    </li>
+                    <li>
+                        Example Response:
+                        <pre> {
+                    article: {
+                      article_id: 3,
+                      title: 'Eight pug gifs that remind me of mitch',
+                      topic: 'mitch',
+                      author: 'icellusedkars',
+                      body: 'some gifs',
+                      created_at: '2020-11-03T09:12:00.000Z',
+                      votes: 100
+                    }
+                  }
+            </pre>
+                    </li>
+                </ul>
+            </details>
+            <br />
+        </article>
+        <article>
+            <details>
+                <summary>POST api/articles/:article_id/comments</summary>
+                <ul>
+                    <li>Description: Adds a new comment to the database</li>
+                    <li>Queries:[]</li>
+                    <li>
+                        <summary>
+                            Example Request:
+                        </summary>
+                        <pre>
+            { 
+            username: 'lurker', 
+            body: 'Amamzing article! Loved it!'
+            }
+                            </pre>
+                    </li>
+                    <li>
+                        <summary>Example Response: </summary>
+                        <pre>
+                            {
+                                comment: {
+                                  comment_id: 19,
+                                  body: 'Amamzing article! Loved it!',
+                                  article_id: 4,
+                                  author: 'lurker',
+                                  votes: 0,
+                                  created_at: '2022-11-01T15:15:16.622Z'
+                                }
+                              }
+                        </pre>
+                    </li>
+                </ul>
+            </details>
+            <br />
+        </article>
+        <article>
+            <details>
+                <summary>DELETE /api/comments/:comment_id</summary>
+                <ul>
+                    <li>Descriptions: Removes the comment of a given comment id</li>
+                    <li>Queries: []</li>
+                    <li>Example Resopnse:{} </li>
+                </ul>
+            </details>
+        </article>
+
+
+</body>
+
+</html>
