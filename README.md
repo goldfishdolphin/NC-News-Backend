@@ -1,5 +1,5 @@
 # Northcoders News API
-We will be building an API for the purpose of accessing application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
+I built APIs to access application data programmatically. The intention here is to mimic the building of a real world backend service (such as reddit) which should provide this information to the front end architecture.
 
 Instructions to follow after cloning this repo:
 
